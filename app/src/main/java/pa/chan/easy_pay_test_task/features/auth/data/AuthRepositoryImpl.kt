@@ -26,7 +26,7 @@ class AuthRepositoryImpl @Inject constructor(
         } catch (e: MissingAppKeyException) {
             throw e
         } catch (e: Exception) {
-            throw ConnectionException("Check your internet connection")
+            throw ConnectionException
         }
     }
 }
