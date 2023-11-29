@@ -1,0 +1,122 @@
+package pa.chan.easy_pay_test_task.features.auth.presentation
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
+import pa.chan.easy_pay_test_task.R
+import pa.chan.easy_pay_test_task.databinding.FragmentAuthBinding
+import pa.chan.easy_pay_test_task.features.auth.data.userExceptions.IncorrectCredentialsException
+
+@AndroidEntryPoint
+class AuthFragment : Fragment() {
+
+    private val vm: AuthViewModel by viewModels()
+
+    private var _binding: FragmentAuthBinding? = null
+    private val binding get() = _binding
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentAuthBinding.inflate(inflater, container, false)
+        return binding?.root
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val authBtn = binding?.authBtn
+        val loginEditText = binding?.loginInputEditText
+        val loginInputLayout = binding?.loginInputLayout
+        val passwordEditText = binding?.passwordInputEditText
+        val passwordInputLayout = binding?.passwordInputLayout
+
+
+
+        vm.exceptionLiveData.observe(viewLifecycleOwner) {
+
+            if (it is IncorrectCredentialsException){
+
+            }
+
+            val snackBar =
+                Snackbar.make(view, it.errorMsg, Snackbar.LENGTH_SHORT)
+
+            snackBar.show()
+
+        }
+
+        vm.loginLiveData.observe(viewLifecycleOwner) {
+
+            findNavController().navigate(R.id.action_authFragment_to_paymentsFragment)
+
+        }
+
+        authBtn?.progressBtn?.setOnClickListener {
+            val login = loginEditText?.text.toString()
+            val password = passwordEditText?.text.toString()
+
+            when {
+                login.isEmpty() && password.isEmpty() -> {
+                    loginInputLayout?.isErrorEnabled = true
+                    loginInputLayout?.error = getString(R.string.invalid_username)
+                    passwordInputLayout?.isErrorEnabled = true
+                    passwordInputLayout?.error = getString(R.string.invalid_password)
+                }
+
+                login.isEmpty() -> {
+                    loginInputLayout?.isErrorEnabled = true
+                    loginInputLayout?.error = getString(R.string.invalid_username)
+                }
+
+                password.isEmpty() -> {
+                    passwordInputLayout?.isErrorEnabled = true
+                    passwordInputLayout?.error = getString(R.string.invalid_password)
+                }
+
+                else -> {
+                    vm.loginUser(login, password)
+                }
+            }
+
+        }
+
+        loginEditText?.addTextChangedListener {
+            if (loginInputLayout?.isErrorEnabled == true) {
+                loginInputLayout.isErrorEnabled = false
+            }
+
+            if (loginEditText.text.isNullOrEmpty()) {
+                loginInputLayout?.isErrorEnabled = true
+                loginInputLayout?.error = getString(R.string.invalid_username)
+            }
+        }
+
+        passwordEditText?.addTextChangedListener {
+            if (passwordInputLayout?.isErrorEnabled == true) {
+                passwordInputLayout.isErrorEnabled = false
+            }
+
+            if (passwordEditText.text.isNullOrEmpty()) {
+                passwordInputLayout?.isErrorEnabled = true
+                passwordInputLayout?.error = getString(R.string.invalid_password)
+            }
+        }
+
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+}
