@@ -14,15 +14,15 @@ class AuthRepositoryImpl @Inject constructor(
         prefDataSource.clearAll()
     }
 
-    override suspend fun loginUser(login: String, password: String) {
-        try {
+    override suspend fun loginUser(login: String, password: String): Boolean {
+        return try {
             val loginResponse = authDataSource.loginUser(LoginRequestDto(login, password))
             if (loginResponse.success) {
                 prefDataSource.setUserToken(loginResponse.response.token)
+                true
             } else {
                 throw MissingAppKeyException(loginResponse.error.errorMsg)
             }
-
         } catch (e: MissingAppKeyException) {
             throw e
         } catch (e: Exception) {
