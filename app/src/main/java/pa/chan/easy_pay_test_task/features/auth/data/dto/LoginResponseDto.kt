@@ -4,8 +4,8 @@ import com.google.gson.annotations.SerializedName
 
 data class LoginResponseDto(
     val success: Boolean,
-    val response : TokenDto,
-    val error : ErrorDto
+    val response: TokenDto,
+    val error: ErrorDto
 )
 
 data class TokenDto(

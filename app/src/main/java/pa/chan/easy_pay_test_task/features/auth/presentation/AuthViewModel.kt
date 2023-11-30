@@ -9,7 +9,6 @@ import kotlinx.coroutines.launch
 import pa.chan.easy_pay_test_task.features.auth.data.userExceptions.ConnectionException
 import pa.chan.easy_pay_test_task.features.auth.data.userExceptions.CustomerException
 import pa.chan.easy_pay_test_task.features.auth.data.userExceptions.IncorrectCredentialsException
-import pa.chan.easy_pay_test_task.features.auth.data.userExceptions.MissingAppKeyException
 import pa.chan.easy_pay_test_task.features.auth.domain.LoginUseCase
 import javax.inject.Inject
 
@@ -36,8 +35,6 @@ class AuthViewModel @Inject constructor(
             } catch (e: ConnectionException) {
                 _exceptionLiveData.postValue(e)
             } catch (e: IncorrectCredentialsException) {
-                _exceptionLiveData.postValue(e)
-            } catch (e: MissingAppKeyException) {
                 _exceptionLiveData.postValue(e)
             }
         }

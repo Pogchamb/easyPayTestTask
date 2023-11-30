@@ -1,6 +1,7 @@
 package pa.chan.easy_pay_test_task.features.payments.data.dto
 
 import pa.chan.easy_pay_test_task.features.payments.domain.model.PaymentModel
+import java.util.Date
 
 data class PaymentsDto(
     val success: Boolean,
@@ -9,22 +10,16 @@ data class PaymentsDto(
 
 data class PaymentDto(
     val id: Int,
-    val title: String,
-    val amount: Any?,
-    val created: Long
+    val title: String?,
+    val amount: String?,
+    val created: String?
 )
 
 fun PaymentDto.toModel(): PaymentModel = PaymentModel(
     id,
     title,
-    amount = if (amount == null) {
-        "amount is not exist"
-    } else if (amount.toString().isEmpty()) {
-        "amount is not exist"
-    } else {
-        amount.toString()
-    },
-    created
+    amount,
+    created = created?.let { Date(it.toLong()) }
 )
 
 
