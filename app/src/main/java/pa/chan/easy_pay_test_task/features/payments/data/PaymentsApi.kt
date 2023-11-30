@@ -11,7 +11,7 @@ interface PaymentsApi {
         "app-key: 12345",
         "v: 1"
     )
-    @GET ("payments")
+    @GET("payments")
     suspend fun getPayments(@Header("token") token: String): PaymentsDto
 
 

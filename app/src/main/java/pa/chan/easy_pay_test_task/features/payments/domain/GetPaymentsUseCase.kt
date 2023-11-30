@@ -10,5 +10,4 @@ class GetPaymentsUseCase @Inject constructor(
     suspend operator fun invoke(): List<PaymentModel> {
         return paymentsRepository.getPaymentsList()
     }
-
 }

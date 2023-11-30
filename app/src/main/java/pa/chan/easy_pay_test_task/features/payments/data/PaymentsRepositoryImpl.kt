@@ -17,7 +17,9 @@ class PaymentsRepositoryImpl @Inject constructor(
             val token = prefDataSource.getUserToken()
             if (!token.isNullOrEmpty()) {
                 val payments = paymentsDataSource.getPayments(token)
+
                 return if (payments.success) {
+
                     payments.response.map {
                         it.toModel()
                     }
@@ -26,6 +28,8 @@ class PaymentsRepositoryImpl @Inject constructor(
                 }
             }
             return emptyList()
+        } catch (e: InvalidTokenException) {
+            throw e
         } catch (e: Exception) {
             throw ConnectionException
         }
